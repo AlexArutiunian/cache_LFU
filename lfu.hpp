@@ -7,15 +7,12 @@
 #include <iostream>
 #include <algorithm>
 
-
 struct page{
     int id;
     int freq;
     page(){ freq = 0; }
     
 };
-
-
 
 bool operator<(const page & lhs, const page & rhs)
 {
@@ -63,5 +60,3 @@ template <typename T, typename KeyT = page> struct cache_t{
         }
     };
 }
-
-
