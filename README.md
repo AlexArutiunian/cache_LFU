@@ -32,7 +32,7 @@ void save_freq_sort(){
 ## 3) O(N*LOG(N))
 
 In this way i used metod of stl: sort.
-The main idea: use struct + metod sort.
+The main idea: use struct and metod sort for list stl.
 
 ```C++
 struct page{
