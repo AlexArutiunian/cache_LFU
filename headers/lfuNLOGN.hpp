@@ -8,22 +8,13 @@
 #include <algorithm>
 
 
-struct page{
-    int id;
-    int freq = 1;
-    
-    bool operator<(const page & rhs)
-    {
-        return freq < rhs.freq;
-    }
-    
-    };
+
 
 namespace caches {  
 template <typename T, typename KeyT = int> struct cache_t{
     
 
-    /*struct page{
+    struct page{
     KeyT id;
     int freq = 1;
     
@@ -32,7 +23,7 @@ template <typename T, typename KeyT = int> struct cache_t{
         return freq < rhs.freq;
     }
     
-    };*/
+    };
 
     std::size_t sz_;
     std::list<page> cache_;

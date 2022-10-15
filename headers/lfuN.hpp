@@ -7,14 +7,14 @@
 #include <iostream>
 #include <algorithm>
 
-struct Page{
-        int id;
-        int freq = 1;
-    }; 
+
 
 namespace caches {  
 template <typename T, typename KeyT = int> struct cache_t{  
-     
+    struct Page{
+        int id;
+        int freq = 1;
+    };  
     std::size_t sz_;
     std::list<Page> cache_;
     using ListIt = typename std::list<Page>::iterator;
