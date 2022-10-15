@@ -60,7 +60,7 @@ in cmd
 cmake -G "Unix Makefiles"
 cmake --build .
 ```
-After it you can start the program cache_LFU
+After that you can start the program cache_LFU
 just input in cmd
 ```
 lfu
