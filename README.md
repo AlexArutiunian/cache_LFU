@@ -9,7 +9,7 @@ The main idea of constant time method is in the picture:
 
 ## 2) O(N)
 
-The main idea here is that we can save freq-sort and use struct.
+The main idea here is that we can save freq-sort and use struct page.
 When a hit occurs, element of cache which has max freq move in the back of list cache.
 ```C++
 struct page{
@@ -31,8 +31,8 @@ void save_freq_sort(){
 
 ## 3) O(N*LOG(N))
 
-In this way i used metod of stl: sort.
-The main idea: use struct and metod sort for list stl.
+I used metod of stl: sort in this way.
+The main idea: use struct page and metod sort for list stl.
 
 ```C++
 struct page{
