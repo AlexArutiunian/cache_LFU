@@ -1,5 +1,5 @@
 # Cache: Least frequency used
-In this repository is 3 types of time-complexity for LFU cache. In the directory "headers" 3 header-files - it is 3 types.
+In this repository is 3 types of time-complexity for LFU cache. In the directory "headers" 3 header-files - it is 3 types; there are also tests and model of ideal cache (when we know all keys from future).
 
 ## 1) O(1) 
 We can read about this method at [the link](https://arpitbhayani.me/blogs/lfu).
