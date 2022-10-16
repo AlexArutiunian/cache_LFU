@@ -76,4 +76,17 @@ cmake --build .
 ```
 ## About tests
 I made random number generation for capacity of cache = 3, range and numder of keys = 10.
-This test is only for key type of int.
+This test is only for key type of int, but code fits for all types.
+
+| num of test | list of keys | res for lfu1 | res for ideal_cache |
+| ---- | ---- | ---- | ---- |
+| 1 | 3 6 7 5 3 5 6 2 9 1 | 1 | 3 |
+| 2 | 2 7 0 9 3 6 0 6 2 6 | 2 | 4 |
+| 3 | 1 8 7 9 2 0 2 3 7 5 | 1 | 2 |
+| 4 | 9 2 2 8 9 7 3 6 1 2 | 3 | 3 |
+| 5 | 9 3 1 9 4 7 8 4 5 0 | 1 | 2 |
+| 6 | 3 6 1 0 6 3 2 0 6 1 | 2 | 3 |
+| 7 | 5 5 4 7 6 5 6 9 3 7 | 3 | 4 |
+| 8 | 4 5 2 5 4 7 4 4 3 0 | 4 | 4 |
+| 9 | 7 8 6 8 8 4 3 1 4 9 | 2 | 3 |
+| 10 | 2 0 6 8 9 2 6 6 4 9 | 1 | 3 |
