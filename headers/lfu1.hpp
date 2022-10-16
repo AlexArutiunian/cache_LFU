@@ -39,7 +39,7 @@ template <typename T, typename KeyT = int> struct cache_t{
         auto hit = hash_.find(k);
         if(hit == hash_.end()){
             if(full()){
-            	delete_key_front();
+            	delete_key();
                 sz_--; 
             }
 
@@ -61,7 +61,7 @@ template <typename T, typename KeyT = int> struct cache_t{
                 cache_.push_front({{}, 1});
             
             
-            push_key_back(k);
+            push_key(k);
             sz_++;
 
             return false;
@@ -105,7 +105,7 @@ template <typename T, typename KeyT = int> struct cache_t{
         itr_freq_node = it_next_freq_node;
     }
 
-    void push_key_back(KeyT k){
+    void push_key(KeyT k){
         
         // add key in list_keys
         // in 1st node, because
@@ -116,7 +116,7 @@ template <typename T, typename KeyT = int> struct cache_t{
         hash_[k] = cache_.front().list_keys.begin();
     }
     
-    void delete_key_front(){
+    void delete_key(){
         // delete back element
         // from 1st sublist (list_keys)
    
