@@ -39,20 +39,8 @@ template <typename T, typename KeyT = int> struct cache_t{
         auto hit = hash_.find(k);
         if(hit == hash_.end()){
             if(full()){
-            
-            // delete back element
-            // from 1st sublist (list_keys)
-           
-                hash_.erase(cache_.front().list_keys.back().key);
-                cache_.front().list_keys.pop_back();
- 
-            // if after delete 
-            // 1st sublist is empthy
-            // then delete it
-
-                if(cache_.front().list_keys.size() == 0)
-                    cache_.pop_front();
-                sz_--;        
+            	delete_key_front();
+                sz_--; 
             }
 
             if(empty()){
@@ -72,13 +60,8 @@ template <typename T, typename KeyT = int> struct cache_t{
             if(cache_.front().freq != 1)
                 cache_.push_front({{}, 1});
             
-            // add key in list_keys
-            // in 1st node, because
-            // save freq sort
-            // to delete from front 
-
-            cache_.front().list_keys.push_front({k, k, cache_.begin()});
-            hash_[k] = cache_.front().list_keys.begin();
+            
+            push_key_back(k);
             sz_++;
 
             return false;
@@ -121,8 +104,40 @@ template <typename T, typename KeyT = int> struct cache_t{
 
         itr_freq_node = it_next_freq_node;
     }
-      
+
+    void push_key_back(KeyT k){
+        
+        // add key in list_keys
+        // in 1st node, because
+        // save freq sort
+        // to delete from front 
+
+        cache_.front().list_keys.push_front({k, k, cache_.begin()});
+        hash_[k] = cache_.front().list_keys.begin();
+    }
+    
+    void delete_key_front(){
+        // delete back element
+        // from 1st sublist (list_keys)
+   
+        hash_.erase(cache_.front().list_keys.back().key);
+        cache_.front().list_keys.pop_back();
+
+        // if after delete 
+        // 1st sublist is empthy
+        // then delete it
+
+        if(cache_.front().list_keys.size() == 0)
+            cache_.pop_front();
+          
+    }
+ 
+          
     };
+
+    
+
+    
 
 }// namespace caches
 

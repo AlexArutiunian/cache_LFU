@@ -7,9 +7,6 @@
 #include <iostream>
 #include <algorithm>
 
-
-
-
 namespace caches {  
 template <typename T, typename KeyT = int> struct cache_t{
     
@@ -40,11 +37,7 @@ template <typename T, typename KeyT = int> struct cache_t{
         auto it = hash_.find(k);
         if(it == hash_.end()){            
             if(full()){ 
-                cache_.sort();                       
-                auto i = cache_.begin();
-                auto kick_it = hash_.find(i->id);  
-                hash_.erase(kick_it);
-                cache_.pop_front();         
+                delete_key_front();        
             }      
             cache_.push_front({k, 1});
             hash_[k] = cache_.begin();
@@ -55,6 +48,14 @@ template <typename T, typename KeyT = int> struct cache_t{
             (it->second)->freq += 1;                        
             return true;
         }   
+    }
+
+    void delete_key_front(){
+        cache_.sort();                       
+        auto i = cache_.begin();
+        auto kick_it = hash_.find(i->id);  
+        hash_.erase(kick_it);
+        cache_.pop_front(); 
     }
        
     };
