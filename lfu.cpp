@@ -2,7 +2,7 @@
 #include <ctime>
 #include <string>
 #include <fstream>
-#include "headers/lfuN.hpp"
+#include "headers/lfu1.hpp"
 
 
 typedef int T;
