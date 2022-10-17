@@ -76,7 +76,7 @@ cmake --build .
 ```
 ## About tests
 I made random number generation for capacity of cache = 3, range and numder of keys = 10.
-This test is only for key type of int, but code fits for all types.
+This test is only for key type of int, but code fits for stl types.
 
 | num of test | list of keys | res for lfu1 | res for ideal_cache |
 | ---- | ---- | ---- | ---- |
