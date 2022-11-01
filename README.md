@@ -92,7 +92,7 @@ This test is only for key type of int, but code fits for stl types.
 | 10 | 2 0 6 8 9 2 6 6 4 9 | 1 | 3 |
 
 
-##You can test to compare the result for cache_lfu and cache_ideal.
+### You can test to compare the result for cache_lfu and cache_ideal.
 
 There is 'test_lfu_vs_ideal.cpp' in the directory 'tests'. You can look result of this test in the 
 directory 'tests' in the file 'compare_lfu_vs_ideal.txt'. 
