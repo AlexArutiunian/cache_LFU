@@ -1,5 +1,5 @@
 #include <iostream>
-#include <ctime>
+#include <chrono>
 #include <string>
 #include <fstream>
 #include "../headers/lfu1.hpp"
@@ -10,7 +10,7 @@ using T = int;
 T slow_get_page(T key){ return key; }
 
 int main(){
-    unsigned int start_time = clock();
+    auto start = std::chrono::steady_clock::now();	
     std::cout << "Start testing" << std::endl;
     test::test(3, 10, 10);  
     int num_pages;
@@ -46,10 +46,10 @@ int main(){
     
     myfile.close();
     restest.close();
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
     
-    unsigned int end_time = clock();
-    double search_time = ((double)(end_time - start_time))/ 1000.0;
-    std::cout << "runtime (sec) = " << search_time << std::endl;
+    std::cout << "runtime (sec) = " << elapsed_seconds.count() << std::endl;
     
     return 0;
 }

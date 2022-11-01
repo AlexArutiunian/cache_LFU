@@ -12,7 +12,7 @@ set_target_properties(
 	CXX_STANDART_REQUIRED ON
 )
 
-add_executable(test_ideal test_ideal.cpp)
+add_executable(test_ideal tests/test_ideal.cpp)
 
 set_target_properties(
 	test_ideal PROPERTIES
@@ -28,7 +28,7 @@ set_target_properties(
 	CXX_STANDART_REQUIRED ON
 )
 
-add_executable(lfu_test lfu_test.cpp)
+add_executable(lfu_test tests/lfu_test.cpp)
 
 set_target_properties(
 	lfu_test PROPERTIES

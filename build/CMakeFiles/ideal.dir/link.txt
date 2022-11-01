@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/ideal.dir/ideal.cpp.o -o ideal 

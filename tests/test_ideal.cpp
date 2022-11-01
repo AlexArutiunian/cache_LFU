@@ -1,5 +1,5 @@
 #include <iostream>
-#include <ctime>
+#include <chrono>
 #include <string>
 #include <fstream>
 #include "../headers/ideal.hpp"
@@ -11,6 +11,7 @@ using T = int;
 T slow_get_page(T key){ return key; }
 
 int main(){
+    auto start = std::chrono::steady_clock::now();
     int num_pages = 8;
     size_t capacity = 3;
     test::test(3, 10, 10);  
@@ -45,7 +46,11 @@ int main(){
         std::cout << '\n';
         std::cout << "res " << a + 1 << ": " << count << std::endl;
         restest << "answer: " << count << '\n';
-
+        
     }
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    
+    std::cout << "runtime (sec) = " << elapsed_seconds.count() << std::endl;
     return 0;
 }
