@@ -17,7 +17,7 @@ int main(){
     int count = 0;  
     caches::cache_t<T> c{capacity};
 
-    for(int i = 0; i < num_pages; i++){
+    for(int i = 0; i < num_pages; ++i){
         T k;
         std::cin >> k;
         if(c.lookup_update(k, slow_get_page(k))) count += 1;

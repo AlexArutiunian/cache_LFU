@@ -36,3 +36,11 @@ set_target_properties(
 	CXX_STANDART_REQUIRED ON
 )
 
+add_executable(test_lfu_vs_ideal tests/test_lfu_vs_ideal.cpp)
+
+set_target_properties(
+    test_lfu_vs_ideal PROPERTIES
+	CXX_STANDART 20
+	CXX_STANDART_REQUIRED ON
+)
+

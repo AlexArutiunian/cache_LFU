@@ -1,6 +1,0 @@
-/home/arutiunian/upd/cache_LFU/build/CMakeFiles/lfu.dir
-/home/arutiunian/upd/cache_LFU/build/CMakeFiles/test_ideal.dir
-/home/arutiunian/upd/cache_LFU/build/CMakeFiles/ideal.dir
-/home/arutiunian/upd/cache_LFU/build/CMakeFiles/lfu_test.dir
-/home/arutiunian/upd/cache_LFU/build/CMakeFiles/edit_cache.dir
-/home/arutiunian/upd/cache_LFU/build/CMakeFiles/rebuild_cache.dir
