@@ -2,9 +2,8 @@
 #include <chrono>
 #include <string>
 #include <fstream>
-#include "../headers/ideal.hpp"
-#include "../headers/random_test.hpp"
-#include "../headers/lfu1.hpp"
+#include "../../headers/ideal.hpp"
+#include "../../headers/random_test.hpp"
 
 
 
@@ -20,19 +19,17 @@ int main(){
     myfile.open("test.1");
 
     std::ofstream restest;
-    restest.open("../tests/compare_lfu_vs_ideal.txt");
+    restest.open("restest.1");
     
 
     for(int a = 0; a < 100; ++a){
 
-        int count_ideal = 0;
-        int count_lfu = 0; 
+        int count = 0; 
         myfile >> capacity >> num_pages; 
         ideal_caches::ideal_cache_<T> c{capacity};
-        caches::cache_t<T> c_lfu{capacity};
-        std::list<T> all_keys;
+        std::vector<T> all_keys;
         restest << "test " << a + 1 << ": ";
-        for(int i = 0; i != num_pages; ++i){
+        for(int i = 0; i != num_pages; i++){
             T k;
             myfile >> k;
             all_keys.push_back(k);
@@ -42,12 +39,13 @@ int main(){
 
 
         for(auto i = all_keys.begin(); i != all_keys.end(); ++i){
-            if(c.lookup_update(all_keys, *i, slow_get_page(*i))) count_ideal += 1;
-            if(c_lfu.lookup_update(*i, slow_get_page(*i))) count_lfu += 1;
+            
+
+            if(c.lookup_update(all_keys, *i, slow_get_page(*i))) count += 1;
         }
         std::cout << '\n';
-        std::cout << "res " << a + 1 << " ideal: " << count_ideal << "; lfu: " << count_lfu << std::endl;
-        restest << "answer_ideal: " << count_ideal << " answer_lfu: " << count_lfu << '\n';
+        std::cout << "res " << a + 1 << ": " << count << std::endl;
+        restest << "answer: " << count << '\n';
         
     }
     auto end = std::chrono::steady_clock::now();

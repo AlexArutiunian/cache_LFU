@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <iterator>
 #include <list>
+#include <vector>
 
 namespace ideal_caches {
 template <typename T, typename KeyT = int> struct ideal_cache_{
@@ -27,7 +28,7 @@ template <typename T, typename KeyT = int> struct ideal_cache_{
     // which hits in cache_
 
     template <typename F>
-    bool lookup_update(const std::list<T> & all_keys, KeyT k, F slow_get_page){
+    bool lookup_update(const std::vector<T> & all_keys, KeyT k, F slow_get_page){
         auto hit = hash_.find(k);
         if(hit == hash_.end()){
             if(full()){
@@ -42,7 +43,7 @@ template <typename T, typename KeyT = int> struct ideal_cache_{
         }
     }
     
-    int freq_(const std::list<T> & all_keys, KeyT k){
+    int freq_(const std::vector<T> & all_keys, KeyT k){
         int freq = 0;
         for(auto i = all_keys.begin(); i != all_keys.end(); ++i){
             if(*i == k) freq++;
@@ -56,6 +57,13 @@ template <typename T, typename KeyT = int> struct ideal_cache_{
         auto kick_it = hash_.find(i->key);  
         hash_.erase(kick_it);
         cache_.pop_front();
+    }
+
+    void dump(){
+        for(auto i = hash_.begin(); i != hash_.end(); ++i){
+            std::cout << i->first << " ";
+        }
+        std::cout << '\n';
     }
 };
 

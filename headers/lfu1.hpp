@@ -6,24 +6,27 @@
 #include <iostream>
 
 
-namespace caches {  
+struct freq_value;
+struct elem{
+    int value;
+    int key;
+    using freq = typename std::list<freq_value>::iterator;
+    freq itr_freq_node;
+};
+
+struct freq_value{
+    std::list<elem> list_keys;
+    int freq = 1;
+
+};
+
+namespace caches { 
+
 template <typename T, typename KeyT = int> struct cache_t{
 
     std::size_t sz_;
     std::size_t cp_;
-    struct freq_value;
-    struct elem{
-        T value;
-        KeyT key;
-        using freq = typename std::list<freq_value>::iterator;
-        freq itr_freq_node;
-    };
-
-    struct freq_value{
-        std::list<elem> list_keys;
-        int freq = 1;
-
-    };
+    
     
     std::list<freq_value> cache_;
 
@@ -63,11 +66,12 @@ template <typename T, typename KeyT = int> struct cache_t{
             
             push_key(k);
             sz_++;
-
+           
             return false;
         }
 
         splice_(hit->second);
+        
         return true;
     }
 
@@ -110,7 +114,7 @@ template <typename T, typename KeyT = int> struct cache_t{
         // add key in list_keys
         // in 1st node, because
         // save freq sort
-        // to delete from front 
+        // to delete from front of freq node
 
         cache_.front().list_keys.push_front({k, k, cache_.begin()});
         hash_[k] = cache_.front().list_keys.begin();
@@ -131,13 +135,15 @@ template <typename T, typename KeyT = int> struct cache_t{
             cache_.pop_front();
           
     }
- 
-          
+
+    void dump(){
+        for(auto i = hash_.begin(); i != hash_.end(); ++i){
+            std::cout << i->first << " ";
+        }
+        std::cout << '\n';
+    }
+
     };
-
-    
-
-    
 
 }// namespace caches
 

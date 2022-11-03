@@ -16,7 +16,7 @@ int main(){
 
     int count = 0;  
     ideal_caches::ideal_cache_<T> c{capacity};
-    std::list<T> all_keys;
+    std::vector<T> all_keys;
     for(int i = 0; i != num_pages; i++){
         T k;
         std::cin >> k;
@@ -25,7 +25,8 @@ int main(){
   //  all_keys = {4, 1, 7, 1, 1, 1, 7, 0, 4, 0};
 
     for(auto i = all_keys.begin(); i != all_keys.end(); ++i){
-        
+       // dump - for print current cache 
+       // c.dump();
         if(c.lookup_update(all_keys, *i, slow_get_page(*i))) count += 1;
     }
     std::cout << count << std::endl;

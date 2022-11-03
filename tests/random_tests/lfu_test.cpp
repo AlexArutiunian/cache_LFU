@@ -2,55 +2,54 @@
 #include <chrono>
 #include <string>
 #include <fstream>
-#include "../headers/ideal.hpp"
-#include "../headers/random_test.hpp"
-
+#include "../../headers/lfu1.hpp"
+#include "../../headers/random_test.hpp"
 
 
 using T = int;
 T slow_get_page(T key){ return key; }
 
 int main(){
-    auto start = std::chrono::steady_clock::now();
-    int num_pages = 8;
-    size_t capacity = 3;
+    auto start = std::chrono::steady_clock::now();	
+    std::cout << "Start testing" << std::endl;
     test::test(3, 10, 10);  
+    int num_pages;
+    size_t capacity;
+    
     std::ifstream myfile;
     myfile.open("test.1");
 
     std::ofstream restest;
     restest.open("restest.1");
+    int count = 0;
+
     
-
     for(int a = 0; a < 100; ++a){
-
-        int count = 0; 
-        myfile >> capacity >> num_pages; 
-        ideal_caches::ideal_cache_<T> c{capacity};
-        std::list<T> all_keys;
+        
+        myfile >> capacity >> num_pages;
+        caches::cache_t<T, T> c{capacity};
         restest << "test " << a + 1 << ": ";
-        for(int i = 0; i != num_pages; i++){
+        for(int i = 0; i < num_pages; i++){
+            
             T k;
             myfile >> k;
-            all_keys.push_back(k);
+            if(c.lookup_update(k, slow_get_page(k))) count += 1;
             std::cout << k << " ";
             restest << k << " ";
         }
-
-
-        for(auto i = all_keys.begin(); i != all_keys.end(); ++i){
-            
-
-            if(c.lookup_update(all_keys, *i, slow_get_page(*i))) count += 1;
-        }
+        
         std::cout << '\n';
         std::cout << "res " << a + 1 << ": " << count << std::endl;
         restest << "answer: " << count << '\n';
-        
+        count = 0;
     }
+    
+    myfile.close();
+    restest.close();
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;
     
     std::cout << "runtime (sec) = " << elapsed_seconds.count() << std::endl;
+    
     return 0;
 }
