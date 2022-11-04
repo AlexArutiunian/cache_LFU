@@ -32,7 +32,10 @@ template <typename T, typename KeyT = int> struct ideal_cache_{
         auto hit = hash_.find(k);
         if(hit == hash_.end()){
             if(full()){
-                delete_();
+                if(more_for_freq(k, all_keys)){
+                    delete_();
+                }
+                else return false;
             }
             cache_.push_front({k, freq_(all_keys, slow_get_page)});
             hash_[k] = cache_.begin();
@@ -65,9 +68,10 @@ template <typename T, typename KeyT = int> struct ideal_cache_{
         }
         std::cout << '\n';
     }
+    bool more_for_freq(KeyT k, const std::vector<T> & all_keys){
+        auto& least_in_cache = cache_.begin()->freq;
+        return(least_in_cache <= freq_(all_keys, k));
+    }
 };
-
-
-
 
 } // namespace ideal_caches

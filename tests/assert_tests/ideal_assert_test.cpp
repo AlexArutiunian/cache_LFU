@@ -44,7 +44,7 @@ int main(){
     hits[4] = test(test_keys[4], cap3);
     hits[5] = test(test_keys[5], cap2);
     
-    assert(hits[0] == 3);
+    assert(hits[0] == 4);
     assert(hits[1] == 1);
     assert(hits[2] == 5);
     assert(hits[3] == 2);
