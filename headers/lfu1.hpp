@@ -6,19 +6,7 @@
 #include <iostream>
 
 
-struct freq_value;
-struct elem{
-    int value;
-    int key;
-    using freq = typename std::list<freq_value>::iterator;
-    freq itr_freq_node;
-};
 
-struct freq_value{
-    std::list<elem> list_keys;
-    int freq = 1;
-
-};
 
 namespace caches { 
 
@@ -27,7 +15,18 @@ template <typename T, typename KeyT = int> struct cache_t{
     std::size_t sz_;
     std::size_t cp_;
     
-    
+    struct freq_value;
+    struct elem{
+        int value;
+        int key;
+        using freq = typename std::list<freq_value>::iterator;
+        freq itr_freq_node;
+    };
+
+    struct freq_value{
+        std::list<elem> list_keys;
+        int freq = 1;
+    };
     std::list<freq_value> cache_;
 
     using ListKeysIt = typename std::list<elem>::iterator;

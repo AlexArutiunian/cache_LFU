@@ -12,7 +12,7 @@ template <typename T, typename KeyT = int> struct ideal_cache_{
     struct freq_key{
         int key;
         int freq = 0;
-        bool operator<(const freq_key & rhs) { return freq < rhs.freq; } 
+        const bool operator<(const freq_key & rhs) { return freq < rhs.freq; } 
     };
     size_t sz_;
     ideal_cache_(std::size_t cp): sz_(cp) {};

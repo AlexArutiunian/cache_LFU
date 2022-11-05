@@ -12,13 +12,13 @@ template <typename T, typename KeyT = int> struct cache_t{
     
 
     struct page{
-    KeyT id;
-    int freq = 1;
+        KeyT id;
+        int freq = 1;
     
-    bool operator<(const page & rhs)
-    {
-        return freq < rhs.freq;
-    }
+        const bool operator<(const page & rhs)
+        {
+            return freq < rhs.freq;
+        }
     
     };
 
