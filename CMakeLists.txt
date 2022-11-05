@@ -1,20 +1,40 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.16)
 
 project(lfu)
 
-list(APPEND bin lfu test_ideal ideal lfu_test test_lfu_vs_ideal lfu_assert_test ideal_assert_test)
-list(APPEND cpp lfu.cpp tests/random_tests/test_ideal.cpp 
-ideal.cpp tests/random_tests/lfu_test.cpp 
-tests/random_tests/test_lfu_vs_ideal.cpp tests/assert_tests/lfu_assert_test.cpp
-tests/assert_tests/ideal_assert_test.cpp)
+set(dir tests/random_tests/ tests/assert_tests/)
+set(main lfu ideal)
+set(tests_random test_ideal lfu_test
+test_lfu_vs_ideal)
+set(tests_assert lfu_assert_test
+ideal_assert_test)
 
-foreach(build IN ZIP_LISTS bin cpp)
-	add_executable(${build_0} ${build_1})
+foreach(bin ${main})
+	add_executable(${bin} ${bin}.cpp)
+	message(${bin})
+	set_target_properties(
+		${bin} PROPERTIES
+		CXX_STANDART 20
+		CXX_STANDART_REQUIRED ON
+	)
+endforeach()
 
-    set_target_properties(
-	${build_0} PROPERTIES
-	CXX_STANDART 20
-	CXX_STANDART_REQUIRED ON
-)
+foreach(bin ${tests_random})
+	add_executable(${bin} tests/random_tests/${bin}.cpp)
+	message(${bin})
+	set_target_properties(
+		${bin} PROPERTIES
+		CXX_STANDART 20
+		CXX_STANDART_REQUIRED ON
+	)
+endforeach()
 
+foreach(bin ${tests_assert})
+	add_executable(${bin} tests/assert_tests/${bin}.cpp)
+	message(${bin})
+	set_target_properties(
+		${bin} PROPERTIES
+		CXX_STANDART 20
+		CXX_STANDART_REQUIRED ON
+	)
 endforeach()
