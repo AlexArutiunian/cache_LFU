@@ -20,7 +20,7 @@ template <typename T, typename KeyT = int> struct ideal_cache_{
     std::list<freq_key> cache_;
     using ListIt = typename std::list<freq_key>::iterator;
     std::unordered_map<KeyT, ListIt> hash_;
-    bool full(){ return (cache_.size() == sz_); } 
+    bool full() const { return (cache_.size() == sz_); } 
     
     // now we know future
     // then we can look at the whole freq 
@@ -62,7 +62,7 @@ template <typename T, typename KeyT = int> struct ideal_cache_{
         cache_.pop_front();
     }
 
-    void dump(){
+    void dump() const{
         for(auto i = hash_.begin(); i != hash_.end(); ++i){
             std::cout << i->first << " ";
         }

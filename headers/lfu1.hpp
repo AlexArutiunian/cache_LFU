@@ -135,7 +135,7 @@ template <typename T, typename KeyT = int> struct cache_t{
           
     }
 
-    void dump(){
+    void dump() const{
         for(auto i = hash_.begin(); i != hash_.end(); ++i){
             std::cout << i->first << " ";
         }
