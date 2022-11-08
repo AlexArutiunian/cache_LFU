@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/lfu_assert_test.dir/tests/assert_tests/lfu_assert_test.cpp.o -o lfu_assert_test 

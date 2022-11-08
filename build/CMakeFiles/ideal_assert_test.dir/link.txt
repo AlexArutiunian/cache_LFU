@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/ideal_assert_test.dir/tests/assert_tests/ideal_assert_test.cpp.o -o ideal_assert_test 
