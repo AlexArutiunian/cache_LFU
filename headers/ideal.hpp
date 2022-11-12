@@ -1,77 +1,129 @@
 #pragma once
 
-#include <iostream>
-#include <unordered_map>
 #include <iterator>
 #include <list>
+#include <unordered_map>
 #include <vector>
+#include <iostream>
+#include <algorithm>
 
-namespace ideal_caches {
-template <typename T, typename KeyT = int> struct ideal_cache_{
-    
-    struct freq_key{
-        int key;
-        int freq = 0;
-        const bool operator<(const freq_key & rhs) { return freq < rhs.freq; } 
-    };
-    size_t sz_;
-    ideal_cache_(std::size_t cp): sz_(cp) {};
 
-    std::list<freq_key> cache_;
-    using ListIt = typename std::list<freq_key>::iterator;
-    std::unordered_map<KeyT, ListIt> hash_;
-    bool full() const { return (cache_.size() == sz_); } 
-    
-    // now we know future
-    // then we can look at the whole freq 
-    // for each element
-    // which hits in cache_
+
+namespace ideal_caches {  
+template <typename T, typename KeyT = int> struct ideal_cache_{  
+    struct Page{
+        KeyT id; 
+        size_t loc = 0;
+    };  
+    std::size_t sz_;
+    std::list<Page> cache_;
+    using ListIt = typename std::list<Page>::iterator;
+    std::unordered_map<KeyT, ListIt> hash_; 
+
+    ideal_cache_(size_t sz) : sz_(sz) {};
+    bool full() const { return (cache_.size() == sz_); }
+
+    using vect_itr = typename std::vector<T>::iterator;
+
+    // main idea : sort cache
+    // by leate met
+    // delete from front if 
+    // element met eailer
+    // than front element in cache
 
     template <typename F>
-    bool lookup_update(const std::vector<T> & all_keys, KeyT k, F slow_get_page){
+    bool lookup_update(const std::vector<T>& all_keys, KeyT k, F slow_get_page, int num_iteration) {
         auto hit = hash_.find(k);
-        if(hit == hash_.end()){
-            if(full()){
-                if(more_for_freq(k, all_keys)){
-                    delete_();
-                }
+        size_t pos = next_pos(all_keys, num_iteration, k);
+        if(hit == hash_.end()){      
+            if(full()){  
+                if(pos < cache_.begin()->loc){
+                    save_sort();                    
+                    delete_lfu();  
+                } 
                 else return false;
-            }
-            cache_.push_front({k, freq_(all_keys, slow_get_page)});
-            hash_[k] = cache_.begin();
-            return false;
+            } 
+            if(pos != all_keys.size() + 1) push_new_elem(k, slow_get_page, pos);
+            save_sort();
+            return false; 
+                  
         }
-        else{
+               
+        else{                                  
+            
+            (hit->second)->loc = pos;
+            save_sort();
+            lookup_future(all_keys, num_iteration, k);
+            delete_if(pos, k, all_keys);
             return true;
+        }     
+    } 
+    
+    void delete_if(size_t pos, KeyT k, const std::vector<T>& all_keys){
+        if(pos == all_keys.size() + 1){
+            auto i = cache_.begin();
+            for(i; i != cache_.end(); ++i){
+                if(k = i->id) break; 
+            } 
+            auto kick_it = hash_.find(i->id);
+            hash_.erase(kick_it);
+            cache_.erase(i);
+            
         }
+    }
+
+    void delete_lfu(){
+        auto i = cache_.begin();
+        auto kick_it = hash_.find(i->id);  
+        hash_.erase(kick_it);
+        cache_.pop_front(); 
+    }
+
+    void push_new_elem(KeyT k, KeyT slow_get_page, size_t pos){
+        cache_.push_front({slow_get_page, pos});
+        hash_[k] = cache_.begin();
+    }
+
+    // save freq sort in cache_
+    // for simple delete from it
+    // complexity O(N)
+
+    void save_sort(){
+        for(auto i = std::next(cache_.begin()); i != cache_.end(); ++i){
+            if(i->loc > std::prev(i)->loc){
+                hash_[i->id] = std::prev(i);
+                hash_[std::prev(i)->id] = i;
+                std::iter_swap(i, std::prev(i));
+            }       
+        }
+    }
+
+    size_t next_pos(const std::vector<T>& data, int num_itrtion, KeyT k){
+        size_t m = static_cast<size_t>(num_itrtion);
+        std::vector<T> data_slice(data.size());
+        std::copy(data.begin() + m, data.end(), data_slice.begin());
+        auto i = std::find(data_slice.begin(), std::prev(data_slice.end()), k);
+        size_t res = m + std::distance(data_slice.begin(), i);
+        return (res <= data.size()) ? res : data.size() + 1;
     }
     
-    int freq_(const std::vector<T> & all_keys, KeyT k){
-        int freq = 0;
-        for(auto i = all_keys.begin(); i != all_keys.end(); ++i){
-            if(*i == k) freq++;
+    void lookup_future(const std::vector<T>& data, int num_itrtion, KeyT k){
+        for(auto i : cache_){
+            i.loc = next_pos(data, num_itrtion, i.id);
+            save_sort();
         }
-        return freq;
     }
 
-    void delete_(){
-        cache_.sort();
-        auto i = cache_.begin();
-        auto kick_it = hash_.find(i->key);  
-        hash_.erase(kick_it);
-        cache_.pop_front();
-    }
-
-    void dump() const{
-        for(auto i = hash_.begin(); i != hash_.end(); ++i){
-            std::cout << i->first << " ";
+    void dump(int n) const{ 
+        std::cout << "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << std::endl;
+        std::cout << n << ")";
+        for(auto i = std::prev(cache_.end()); i != std::prev(cache_.begin()); --i){
+            std::cout << "\nKEY " << i->id << " " << " NEXT MET " << i->loc << std::endl;
         }
-        std::cout << '\n';
+        std::cout << std::endl;  
     }
-    bool more_for_freq(KeyT k, const std::vector<T> & all_keys){
-        auto& least_in_cache = cache_.begin()->freq;
-        return(least_in_cache <= freq_(all_keys, k));
-    }
-};
 
-} // namespace ideal_caches
+    };
+}// namespace ideal_caches
+
+

@@ -13,8 +13,10 @@ T slow_get_page(T key){
 int test(std::vector<T>& test_keys, size_t cap){
     int hit = 0;
     ideal_caches::ideal_cache_<T> c{cap};
+    int a = 0;
     for(auto i = test_keys.begin(); i != test_keys.end(); ++i){
-        if(c.lookup_update(test_keys, *i, slow_get_page(*i))){
+        a += 1;
+        if(c.lookup_update(test_keys, *i, slow_get_page(*i), a)){
             hit += 1;
         }
     }
@@ -47,7 +49,7 @@ int main(){
     assert(hits[0] == 4);
     assert(hits[1] == 1);
     assert(hits[2] == 5);
-    assert(hits[3] == 2);
+    assert(hits[3] == 3);
     assert(hits[4] == 2);
     assert(hits[5] == 0);
 

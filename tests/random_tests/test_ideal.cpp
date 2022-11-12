@@ -37,11 +37,10 @@ int main(){
             restest << k << " ";
         }
 
-
+        int z = 0;
         for(auto i = all_keys.begin(); i != all_keys.end(); ++i){
-            
-
-            if(c.lookup_update(all_keys, *i, slow_get_page(*i))) count += 1;
+            z += 1;
+            if(c.lookup_update(all_keys, *i, slow_get_page(*i), z)) count += 1;
         }
         std::cout << '\n';
         std::cout << "res " << a + 1 << ": " << count << std::endl;

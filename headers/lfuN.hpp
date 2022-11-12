@@ -8,11 +8,10 @@
 #include <algorithm>
 
 
-
 namespace caches {  
 template <typename T, typename KeyT = int> struct cache_t{  
     struct Page{
-        int id;
+        KeyT id;
         int freq = 1;
     };  
     std::size_t sz_;

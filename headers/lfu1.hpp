@@ -5,9 +5,6 @@
 #include <unordered_map>
 #include <iostream>
 
-
-
-
 namespace caches { 
 
 template <typename T, typename KeyT = int> struct cache_t{
@@ -17,8 +14,7 @@ template <typename T, typename KeyT = int> struct cache_t{
     
     struct freq_value;
     struct elem{
-        int value;
-        int key;
+        KeyT key;
         using freq = typename std::list<freq_value>::iterator;
         freq itr_freq_node;
     };
@@ -115,7 +111,7 @@ template <typename T, typename KeyT = int> struct cache_t{
         // save freq sort
         // to delete from front of freq node
 
-        cache_.front().list_keys.push_front({k, k, cache_.begin()});
+        cache_.front().list_keys.push_front({k, cache_.begin()});
         hash_[k] = cache_.front().list_keys.begin();
     }
     

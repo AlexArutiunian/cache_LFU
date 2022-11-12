@@ -40,12 +40,13 @@ int main(){
             restest << k << " ";
         }
 
-
+        int b = 0;
         for(auto i = all_keys.begin(); i != all_keys.end(); ++i){
-            if(c.lookup_update(all_keys, *i, slow_get_page(*i))) count_ideal += 1;
+            b += 1;
+            if(c.lookup_update(all_keys, *i, slow_get_page(*i), b)) count_ideal += 1;
             if(c_lfu.lookup_update(*i, slow_get_page(*i))) count_lfu += 1;
         }
-        std::cout << '\n';
+        std::cout << "\n- - - - - - - - - - -\n";
         std::cout << "res " << a + 1 << " ideal: " << count_ideal << "; lfu: " << count_lfu << std::endl;
         restest << "answer_ideal: " << count_ideal << " answer_lfu: " << count_lfu << '\n';
         

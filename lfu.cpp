@@ -25,5 +25,3 @@ int main(){
     std::cout << count << std::endl;
     return 0;
 }
-
-// 3 10 9 4 3 5 1 7 4 3 1 4
