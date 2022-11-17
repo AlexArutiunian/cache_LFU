@@ -28,7 +28,7 @@ int main(){
         int count_ideal = 0;
         int count_lfu = 0; 
         myfile >> capacity >> num_pages; 
-        ideal_caches::ideal_cache_<T> c{capacity};
+        
         caches::cache_t<T> c_lfu{capacity};
         std::vector<T> all_keys;
         restest << "test " << a + 1 << ": ";
@@ -41,9 +41,10 @@ int main(){
         }
 
         int b = 0;
+        ideal_caches::ideal_cache_<T> c{all_keys, capacity};
         for(auto i = all_keys.begin(); i != all_keys.end(); ++i){
             b += 1;
-            if(c.lookup_update(all_keys, *i, slow_get_page(*i), b)) count_ideal += 1;
+            if(c.lookup_update(*i, slow_get_page(*i), b)) count_ideal += 1;
             if(c_lfu.lookup_update(*i, slow_get_page(*i))) count_lfu += 1;
         }
         std::cout << "\n- - - - - - - - - - -\n";

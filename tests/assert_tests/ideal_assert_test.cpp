@@ -12,13 +12,14 @@ T slow_get_page(T key){
 
 int test(std::vector<T>& test_keys, size_t cap){
     int hit = 0;
-    ideal_caches::ideal_cache_<T> c{cap};
+    ideal_caches::ideal_cache_<T> c{test_keys, cap};
     int a = 0;
     for(auto i = test_keys.begin(); i != test_keys.end(); ++i){
-        a += 1;
-        if(c.lookup_update(test_keys, *i, slow_get_page(*i), a)){
+        
+        if(c.lookup_update(*i, slow_get_page(*i), a)){
             hit += 1;
-        }
+        } 
+        a += 1;
     }
     return hit;
 }
