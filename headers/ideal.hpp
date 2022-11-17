@@ -1,129 +1,147 @@
-#pragma once
-
-#include <iterator>
-#include <list>
-#include <unordered_map>
-#include <vector>
 #include <iostream>
+#include <chrono>
+#include <string>
+#include <fstream>
+#include <vector>
 #include <algorithm>
+#include <iterator>
+#include <unordered_map>
+#include <set>
+#include <list>
+#include <deque>
 
 
+namespace ideal_caches{
+template <typename T> struct ideal_cache_{
 
-namespace ideal_caches {  
-template <typename T, typename KeyT = int> struct ideal_cache_{  
-    struct Page{
-        KeyT id; 
-        size_t loc = 0;
-    };  
-    std::size_t sz_;
-    std::list<Page> cache_;
-    using ListIt = typename std::list<Page>::iterator;
-    std::unordered_map<KeyT, ListIt> hash_; 
 
-    ideal_cache_(size_t sz) : sz_(sz) {};
-    bool full() const { return (cache_.size() == sz_); }
+    size_t data_size;
+    size_t cp;
+    size_t sz;
+    ideal_cache_(const std::vector<T>& data, size_t cp_) : data_size{data.size()}, cp{cp_}, sz(0) {
+        for(auto i = data.begin(); i != data.end(); ++i){
+            auto search_it = hash_ftr.find(*i);
+            if(search_it == hash_ftr.end()){
+                unique_key_.push_front({{}, *i});
+                unique_key_.front().met.push_back(std::distance(data.begin(), i));
+                hash_ftr[*i] = unique_key_.begin();
+                
+            }
+            else{
+                search_it->second->met.push_back(std::distance(data.begin(), i));
+            
+            }
+        }
+    }
 
-    using vect_itr = typename std::vector<T>::iterator;
+    
+    
+    struct met_key{
+        std::list<size_t> met;  
+        T key;  
+        bool const operator== (const met_key& rhs) {return key == rhs.key;}
+        bool const operator== (const int rhs) {return key == rhs;}
+        
+    };
+    
+    std::deque<met_key> unique_key_;
+    using ItUnKeys = typename std::deque<met_key>::iterator;
+    std::unordered_map<T, ItUnKeys> hash_ftr;
 
-    // main idea : sort cache
-    // by leate met
-    // delete from front if 
-    // element met eailer
-    // than front element in cache
+    struct elem{
+        T key;
+        size_t loc;
+        bool const operator< (const elem& rhs) { return loc > rhs.loc; }
+    };
+
+    std::list<elem> cache_;
+    using ListIt = typename std::list<elem>::iterator;
+    std::unordered_map<T, ListIt> hash_;
+
+    void upd_cache(){
+        for(auto i = cache_.begin(); i != cache_.end(); ++i){
+            auto itr = hash_ftr.find(i->key);
+            if(*itr->second->met.begin() == data_size + 1){
+                auto kick_it = hash_.find(i->key);
+                hash_.erase(kick_it);
+                cache_.erase(i);
+                return;
+            }
+            i->loc = *itr->second->met.begin();
+        }
+    }
+
+    void upd_future(T k, int num_itrtion){ 
+        for(auto i : hash_ftr){
+            if(*i.second->met.begin() <=  static_cast<size_t>(num_itrtion)){
+                if(i.second->met.size() == 1){
+                    i.second->met.push_back(data_size + 1);
+                } 
+                
+                i.second->met.pop_front();
+            }
+             
+        }
+    }
+    
+    bool full() const { return (cache_.size() == cp); }
 
     template <typename F>
-    bool lookup_update(const std::vector<T>& all_keys, KeyT k, F slow_get_page, int num_iteration) {
+    bool lookup_update(T k, F slow_get_page, int num_itrtion){
+        upd_cache();
+        auto& ref_itrtion = num_itrtion;
+        upd_future(k, ref_itrtion);
         auto hit = hash_.find(k);
-        size_t pos = next_pos(all_keys, num_iteration, k);
-        if(hit == hash_.end()){      
-            if(full()){  
-                if(pos < cache_.begin()->loc){
-                    save_sort();                    
+        if(hit == hash_.end()){
+            auto itr = hash_ftr.find(k);
+            if(*itr->second->met.begin() == data_size + 1){
+                return false;
+            }
+            if(full()){
+                cache_.sort();
+                
+                if(itr->second->met.front() < cache_.begin()->loc){                   
                     delete_lfu();  
                 } 
                 else return false;
-            } 
-            if(pos != all_keys.size() + 1) push_new_elem(k, slow_get_page, pos);
-            save_sort();
-            return false; 
-                  
-        }
-               
-        else{                                  
+            }   
             
-            (hit->second)->loc = pos;
-            save_sort();
-            lookup_future(all_keys, num_iteration, k);
-            delete_if(pos, k, all_keys);
+            cache_.push_front({k, *(itr->second->met.begin())});
+            hash_[k] = cache_.begin();
+            return false;
+
+        }
+        else{
+                         
             return true;
-        }     
-    } 
-    
-    void delete_if(size_t pos, KeyT k, const std::vector<T>& all_keys){
-        if(pos == all_keys.size() + 1){
-            auto i = cache_.begin();
-            for(i; i != cache_.end(); ++i){
-                if(k = i->id) break; 
-            } 
-            auto kick_it = hash_.find(i->id);
-            hash_.erase(kick_it);
-            cache_.erase(i);
-            
         }
+
     }
 
     void delete_lfu(){
         auto i = cache_.begin();
-        auto kick_it = hash_.find(i->id);  
+        auto kick_it = hash_.find(i->key);  
         hash_.erase(kick_it);
         cache_.pop_front(); 
     }
 
-    void push_new_elem(KeyT k, KeyT slow_get_page, size_t pos){
-        cache_.push_front({slow_get_page, pos});
-        hash_[k] = cache_.begin();
-    }
-
-    // save freq sort in cache_
-    // for simple delete from it
-    // complexity O(N)
-
-    void save_sort(){
-        for(auto i = std::next(cache_.begin()); i != cache_.end(); ++i){
-            if(i->loc > std::prev(i)->loc){
-                hash_[i->id] = std::prev(i);
-                hash_[std::prev(i)->id] = i;
-                std::iter_swap(i, std::prev(i));
-            }       
-        }
-    }
-
-    size_t next_pos(const std::vector<T>& data, int num_itrtion, KeyT k){
-        size_t m = static_cast<size_t>(num_itrtion);
-        std::vector<T> data_slice(data.size());
-        std::copy(data.begin() + m, data.end(), data_slice.begin());
-        auto i = std::find(data_slice.begin(), std::prev(data_slice.end()), k);
-        size_t res = m + std::distance(data_slice.begin(), i);
-        return (res <= data.size()) ? res : data.size() + 1;
-    }
-    
-    void lookup_future(const std::vector<T>& data, int num_itrtion, KeyT k){
+    void dump_c() const {
+        std::cout << "\nKEY; NEXT MET\n";
         for(auto i : cache_){
-            i.loc = next_pos(data, num_itrtion, i.id);
-            save_sort();
+            std::cout << i.key << "    ";
+            std::cout << i.loc << "\n";
         }
+        std::cout << "\n- - - - - - - - - - ";
     }
 
-    void dump(int n) const{ 
-        std::cout << "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << std::endl;
-        std::cout << n << ")";
-        for(auto i = std::prev(cache_.end()); i != std::prev(cache_.begin()); --i){
-            std::cout << "\nKEY " << i->id << " " << " NEXT MET " << i->loc << std::endl;
+    void dump_ftr() const {
+        std::cout << "\nKEY;   MET\n";
+        for(auto i : hash_ftr){
+            std::cout << i.first << "   ";
+            std::cout << *i.second->met.begin() << "\n";
         }
-        std::cout << std::endl;  
+        std::cout << "\n- - - - - - - - - - ";
     }
 
-    };
-}// namespace ideal_caches
-
-
+};
+} // namespace
