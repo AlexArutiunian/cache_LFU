@@ -5,11 +5,11 @@ using T = int;
 T slow_get_page(T key){ return key; }
 
 int main(){
-    auto start = std::chrono::steady_clock::now();
+    
     
     size_t capacity = 0;
     int num_pages = 0;
-    std::cin >> capacity >> num_pages;
+    std::cin >> num_pages >> capacity;
 
     std::vector<T> all_keys;
     for(int i = 0; i != num_pages; ++i){
@@ -18,6 +18,7 @@ int main(){
         all_keys.push_back(k);
     }
     
+    auto start = std::chrono::steady_clock::now();
     ideal_caches::ideal_cache_<T> c(all_keys, capacity); 
     int a = 0;
     int hits = 0;
