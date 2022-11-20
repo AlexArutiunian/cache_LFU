@@ -1,13 +1,10 @@
 #include <iostream>
-#include <string>
-#include <fstream>
 #include <vector>
 #include <algorithm>
 #include <iterator>
 #include <unordered_map>
-#include <set>
-#include <list>
 #include <deque>
+#include <list>
 
 
 namespace ideal_caches{
@@ -34,9 +31,8 @@ template <typename T> struct ideal_cache_{
     }
 
     
-    
     struct met_key{
-        std::list<size_t> met;  
+        std::deque<size_t> met;  
         T key;  
         bool const operator== (const met_key& rhs) {return key == rhs.key;}
         bool const operator== (const int rhs) {return key == rhs;}
