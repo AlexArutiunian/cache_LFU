@@ -1,5 +1,4 @@
 #include <iostream>
-#include <ctime>
 #include <string>
 #include <fstream>
 #include "headers/lfu1.hpp"
