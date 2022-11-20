@@ -9,7 +9,7 @@ int main(){
     
     size_t capacity = 0;
     int num_pages = 0;
-    std::cin >> num_pages >> capacity;
+    std::cin >> capacity >> num_pages;
 
     std::vector<T> all_keys;
     for(int i = 0; i != num_pages; ++i){
