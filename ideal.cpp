@@ -1,5 +1,5 @@
 #include "headers/ideal.hpp"
-
+#include <chrono>
 
 using T = int;
 T slow_get_page(T key){ return key; }
