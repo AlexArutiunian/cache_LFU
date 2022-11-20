@@ -66,7 +66,7 @@ template <typename T> struct ideal_cache_{
         }
     }
 
-    void upd_future(T k, int num_itrtion){ 
+    void upd_future(T k, const int& num_itrtion){ 
         for(auto i : hash_ftr){
             if(*i.second->met.begin() <=  static_cast<size_t>(num_itrtion)){
                 if(i.second->met.size() == 1){
