@@ -23,7 +23,7 @@ int main(){
     int a = 0;
     int hits = 0;
     for(auto i : all_keys){
-        if(c.lookup_update(i, i, a)) hits += 1;
+        if(c.lookup_update(i, slow_get_page(i), a)) hits += 1;
         a += 1;
     }
     
