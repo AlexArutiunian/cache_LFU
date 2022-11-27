@@ -9,8 +9,8 @@ namespace caches {
 
 template <typename T, typename KeyT = int> struct cache_t{
 
-    std::size_t sz_;
-    std::size_t cp_;
+    std::size_t sz_ = 0;
+    std::size_t cp_ = 0;
     
     struct freq_value;
     struct elem{
@@ -27,7 +27,7 @@ template <typename T, typename KeyT = int> struct cache_t{
 
     using ListKeysIt = typename std::list<elem>::iterator;
     std::unordered_map<KeyT, ListKeysIt> hash_;
-    cache_t(std::size_t cp) : cp_{cp}, sz_{0} {};
+    cache_t(std::size_t cp) : cp_{cp} {};
 
     bool full() const { return (sz_ == cp_); }
     bool empty() const { return (sz_ == 0); }

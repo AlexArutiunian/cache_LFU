@@ -12,9 +12,9 @@ T slow_get_page(T key){ return key; }
 
 int main(){
     auto start = std::chrono::steady_clock::now();
-    int num_pages = 50000;
-    size_t capacity = 100;
-    test::test(100, 50000, 500);  
+    int num_pages = 200000;
+    size_t capacity = 100000;
+    test::test(num_pages, capacity, 100000);  
     std::ifstream myfile;
     myfile.open("test.1");
 
@@ -50,7 +50,7 @@ int main(){
    // }
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;
-    
+    std::cout << count << std::endl;
     std::cout << "runtime (sec) = " << elapsed_seconds.count() << std::endl
     << "\nthe number of pages: " << num_pages << " and capacity of cache: " << capacity;
     return 0;

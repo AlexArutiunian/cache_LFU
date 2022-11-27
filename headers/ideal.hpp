@@ -11,9 +11,9 @@ namespace ideal_caches{
 template <typename T> struct ideal_cache_{
 
 
-    size_t cp;
-    size_t sz;
-    ideal_cache_(const std::vector<T>& data, size_t cp_) : cp{cp_}, sz(0) {
+    size_t cp = 0;
+    size_t sz = 0;
+    ideal_cache_(const std::vector<T>& data, size_t cp_) : cp{cp_} {
         for(auto i = data.begin(); i != data.end(); ++i){
             auto search_it = hash_ftr.find(*i);
             if(search_it == hash_ftr.end()){
@@ -81,7 +81,7 @@ template <typename T> struct ideal_cache_{
 
     }
 
-    ListIt find_max(){
+    const ListIt find_max(){
         size_t max = cache_.begin()->loc;
         auto kick_candidate = cache_.begin();
         for(auto i = cache_.begin(); i != cache_.end(); ++i){
@@ -107,11 +107,7 @@ template <typename T> struct ideal_cache_{
 
     void erase_(const T& k){
         auto kick_it = hash_.find(k);
-        auto iterat = cache_.begin();
-        for(auto i = cache_.begin(); i != cache_.end(); ++i){
-            if(i->key == k) iterat = i;
-        }
-        cache_.erase(iterat);
+        cache_.erase(kick_it->second);
         hash_.erase(kick_it);
     }
 

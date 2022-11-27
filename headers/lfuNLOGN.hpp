@@ -27,7 +27,7 @@ template <typename T, typename KeyT = int> struct cache_t{
     using ListIt = typename std::list<page>::iterator;
     std::unordered_map<KeyT, ListIt> hash_; 
 
-    cache_t(size_t sz) : sz_(sz) {}
+    cache_t(size_t sz) : sz_{sz} {}
 
     bool full() const { return (cache_.size() == sz_); }
     
