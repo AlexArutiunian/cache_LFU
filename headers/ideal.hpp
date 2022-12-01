@@ -32,6 +32,7 @@ template <typename T> struct ideal_cache_{
         T key;
         size_t loc;
         std::deque<size_t> met;
+        bool operator<(const elem& rhs) {return rhs.loc < loc; }
     };
     std::deque<elem> unique_key_;
     using ItUnKeys = typename std::deque<elem>::iterator;
@@ -55,7 +56,8 @@ template <typename T> struct ideal_cache_{
                 return false;
             }
             if(full()){
-                auto kick_candidate = find_max();
+               // auto kick_candidate = find_max();
+                auto kick_candidate = max_element(cache_.begin(), cache_.end());
                 if(itr->second->met.front() < kick_candidate->loc){                   
                     delete_(kick_candidate);  
                 } 
@@ -81,13 +83,14 @@ template <typename T> struct ideal_cache_{
 
     }
 
-    const ListIt find_max(){
+    
+    ListIt find_max(){
         size_t max = cache_.begin()->loc;
-        auto kick_candidate = cache_.begin();
+        ListIt kick_candidate;
         for(auto i = cache_.begin(); i != cache_.end(); ++i){
             if(i->loc > max){
                 max = i->loc;
-                kick_candidate = i;
+                kick_candidate = (i);
             }
         } 
         return kick_candidate;
