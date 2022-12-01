@@ -56,7 +56,7 @@ template <typename T> struct ideal_cache_{
                 return false;
             }
             if(full()){
-               // auto kick_candidate = find_max();
+               
                 auto kick_candidate = max_element(cache_.begin(), cache_.end());
                 if(itr->second->met.front() < kick_candidate->loc){                   
                     delete_(kick_candidate);  
@@ -81,19 +81,6 @@ template <typename T> struct ideal_cache_{
             return true;
         }
 
-    }
-
-    
-    ListIt find_max(){
-        size_t max = cache_.begin()->loc;
-        ListIt kick_candidate;
-        for(auto i = cache_.begin(); i != cache_.end(); ++i){
-            if(i->loc > max){
-                max = i->loc;
-                kick_candidate = (i);
-            }
-        } 
-        return kick_candidate;
     }
 
     void upd_cache(const T&k, const int& num_itrtion){
