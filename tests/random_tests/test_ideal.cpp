@@ -12,9 +12,9 @@ T slow_get_page(T key){ return key; }
 
 int main(){
     auto start = std::chrono::steady_clock::now();
-    int num_pages = 200000;
-    size_t capacity = 100000;
-    test::test(num_pages, capacity, 100000);  
+    int num_pages = 1000000;
+    size_t capacity = 5000;
+    test::test(capacity, num_pages, 10000);  
     std::ifstream myfile;
     myfile.open("test.1");
 
@@ -38,10 +38,14 @@ int main(){
     }
 
     int z = 0;
+    std::vector<int> HITS;
     ideal_caches::ideal_cache_<T> c{all_keys, capacity};
     for(auto i = all_keys.begin(); i != all_keys.end(); ++i){
-        z += 1;
-        if(c.lookup_update(*i, slow_get_page(*i), z)) count += 1;
+        
+        if(c.lookup_update(*i, slow_get_page(*i), z)){
+            count += 1;
+        } 
+        z += 1;   
     }
     /*   std::cout << '\n';
     std::cout << "res " << a + 1 << ": " << count << std::endl;
@@ -53,5 +57,7 @@ int main(){
     std::cout << count << std::endl;
     std::cout << "runtime (sec) = " << elapsed_seconds.count() << std::endl
     << "\nthe number of pages: " << num_pages << " and capacity of cache: " << capacity;
+    
+
     return 0;
 }

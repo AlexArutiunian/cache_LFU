@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <deque>
 #include <list>
+#include <map>
 
 
 namespace ideal_caches{
@@ -32,15 +33,15 @@ template <typename T> struct ideal_cache_{
         T key;
         size_t loc;
         std::deque<size_t> met;
-        bool operator<(const elem& rhs) {return rhs.loc < loc; }
+        bool operator< (const elem& rhs) const {return rhs.loc > loc; }
     };
     std::deque<elem> unique_key_;
     using ItUnKeys = typename std::deque<elem>::iterator;
     std::unordered_map<T, ItUnKeys> hash_ftr;
 
-    std::list<elem> cache_;
-    using ListIt = typename std::list<elem>::iterator;
-    std::unordered_map<T, ListIt> hash_;
+    std::map<size_t, elem> cache_;
+    using MapIt = typename std::map<size_t, elem>::iterator;
+    std::unordered_map<T, MapIt> hash_;
     
     bool full() const { return (cache_.size() == cp); }
 
@@ -57,27 +58,29 @@ template <typename T> struct ideal_cache_{
             }
             if(full()){
                
-                auto kick_candidate = max_element(cache_.begin(), cache_.end());
-                if(itr->second->met.front() < kick_candidate->loc){                   
+                auto kick_candidate = std::prev(cache_.end());
+                if(itr->second->met.front() < kick_candidate->second.loc){                   
                     delete_(kick_candidate);  
                 } 
                 else return false;
             }   
             
-            cache_.push_front({k, *(itr->second->met.begin()), {}});
-            hash_[k] = cache_.begin();
+            auto in = cache_.insert({*(itr->second->met.begin()), {k, *(itr->second->met.begin()), {}}});
+            hash_[k] = in.first;
             return false;
 
         }
         else{
             auto itr = hash_ftr.find(k);
             upd_cache(k, num_itrtion);  
-           
+            
             if(*itr->second->met.begin() == 0){
                 erase_(k);
                 return true;
             }   
-            hit->second->loc = *itr->second->met.begin();       
+            delete_(hit->second);
+            auto in = cache_.insert({*(itr->second->met.begin()), {k, *(itr->second->met.begin()), {}}});
+            hash_[k] = in.first;
             return true;
         }
 
@@ -101,8 +104,8 @@ template <typename T> struct ideal_cache_{
         hash_.erase(kick_it);
     }
 
-    void delete_(ListIt it){
-        auto kick_it = hash_.find(it->key);  
+    void delete_(MapIt it){
+        auto kick_it = hash_.find(it->second.key);  
         hash_.erase(kick_it);
         cache_.erase(it); 
     }
@@ -110,8 +113,8 @@ template <typename T> struct ideal_cache_{
     void dump_c() const {
         std::cout << "\nKEY; NEXT MET\n";
         for(auto i : cache_){
-            std::cout << i.key << "    ";
-            std::cout << i.loc << "\n";
+            std::cout << i.second.key << "    ";
+            std::cout << i.second.loc << "\n";
         }
         std::cout << "\n- - - - - - - - - - ";
     }
