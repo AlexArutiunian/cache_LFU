@@ -4,7 +4,7 @@ In this repository is 3 types of time-complexity for LFU cache. In the directory
 Input: number of requests (keys) and these requests. <br>
 Output: number of hits (requests that push in cache but yet is in cache) <br>
 
-Example:
+Example:<br>
 Input:
 ```bash
 6 1 2 1 2 3 4
