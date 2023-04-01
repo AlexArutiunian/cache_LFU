@@ -2,11 +2,14 @@
 In this repository is 3 types of time-complexity for LFU cache. In the directory "headers" 3 header-files - it is 3 types; there are also tests and model of ideal cache (when we know all keys from future).
 
 Input: number of requests (keys) and these requests. <br>
-Output: number of hits (requests that push in cache but yet is in cache) 
+Output: number of hits (requests that push in cache but yet is in cache) <br>
+
 Example:
+Input:
 ```bash
 6 1 2 1 2 3 4
 ```
+Output:
 ```bash
 2
 ```
